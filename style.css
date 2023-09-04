@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+html, body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+}
+
+.wrapper {
+    height: 100%;
+    position: relative;
+}
+
+#home {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#title {
+    color: #f8ff79;
+    font-size: 100px;
+    font-family: 'Sawarabi Gothic', sans-serif;
+    font-family: 'Stardos Stencil', cursive;
+    user-select: none;
+}
+
+#menu {
+    font-size: larger;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#menu div {
+    margin: 10px 0px 10px 0;
+}
+
+#menu a {
+    color: #fff;
+    text-decoration: none;
+    user-select: none;
+}
+
+#container {
+    position: relative;
+}
