@@ -10,8 +10,24 @@
     <title>Make | MyMeteor</title>
 </head>
 <body>
-    <div class="wrapper" onclick="putStar">
-        
+    <div class="editor">
+        <div id="setting">
+            <p>Brightnes</p>
+            <input id="brightness" type="range" max="7" min="1" step="1">
+            <p>Color</p>
+            <div>
+                <input id="color_white" name="color" checked="true" type="radio" value="white"><label for="color_white">White</label><br>
+                <!--
+                <input id="color_red" name="color" type="radio" value="red"><label for="color_red">Red</label><br>
+                <input id="color_blue" name="color" type="radio" value="blue"><label for="color_blue">Blue</label><br>
+                <input id="color_green" name="color" type="radio" value="green"><label for="color_green">Green</label>
+                -->
+            </div>
+        </div>
+        <div id="canvas"></div>
     </div>
+    <script>
+        const brightness = document.getElementById('brightness');
+    </script>
 </body>
 </html>

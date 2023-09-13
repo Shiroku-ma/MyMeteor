@@ -5,4 +5,19 @@ html, body {
 body {
     overflow: hidden;
     background-color: #000;
+    font-family: sans-serif;
+}
+
+.editor {
+    display: flex;
+}
+
+#setting {
+    width: 165px;
+    background-color: rgb(56, 56, 56);
+    color: #aaa;
+}
+
+#setting p {
+    padding-left: 10px;
 }
