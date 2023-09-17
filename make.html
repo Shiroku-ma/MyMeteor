@@ -5,29 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-    <script src="./make.js"></script>
+    <!-- <script src="./p5.min.js"></script> -->
+    <script src="https://kit.fontawesome.com/247ea269e7.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./make.css">
     <title>Make | MyMeteor</title>
 </head>
 <body>
     <div class="editor">
+        <div id="settingWrap" class="visible">
+        <i class="fa-solid fa-angles-right" id="hideToggle"></i>
         <div id="setting">
-            <p>Brightnes</p>
-            <input id="brightness" type="range" max="7" min="1" step="1">
-            <p>Color</p>
-            <div>
-                <input id="color_white" name="color" checked="true" type="radio" value="white"><label for="color_white">White</label><br>
-                <!--
-                <input id="color_red" name="color" type="radio" value="red"><label for="color_red">Red</label><br>
-                <input id="color_blue" name="color" type="radio" value="blue"><label for="color_blue">Blue</label><br>
-                <input id="color_green" name="color" type="radio" value="green"><label for="color_green">Green</label>
-                -->
+            <select name="addMode" id="addMode">
+                <option checked value="click">click to add</option>
+                <option value="area">Add to area</option>
+            </select>
+            <div id="addToClick">
+                <p>Brightnes</p>
+                <input id="brightness" type="range" max="6" min="0" step="1">
+                <p>Color</p>
+                <div>
+                    <input id="color_white" name="color" checked="true" type="radio" value="white"><label for="color_white">White</label><br>
+                    <!--
+                        <input id="color_red" name="color" type="radio" value="red"><label for="color_red">Red</label><br>
+                        <input id="color_blue" name="color" type="radio" value="blue"><label for="color_blue">Blue</label><br>
+                        <input id="color_green" name="color" type="radio" value="green"><label for="color_green">Green</label>
+                    -->
+                </div>
             </div>
+            
+            <div id="addInArea">
+                <p>number of stars</p>
+                <input type="text" name="number" id="starNumber"><br>
+                <input type="checkbox" name="ramdomBrightness" id="rb"><label for="rb">random brightness</label><br>
+                <div id="putStar" class="unavailable" onclick="putStarInArea()">Put</div>
+            </div>
+        </div>
         </div>
         <div id="canvas"></div>
     </div>
-    <script>
-        const brightness = document.getElementById('brightness');
-    </script>
+    <script src="./make.js"></script>
 </body>
 </html>
