@@ -38,11 +38,11 @@ body {
 }
 
 #putStar {
-    cursor: pointer;
     text-align: center;
     margin: 8px 0px 8px 0px;
     border-radius: 8px;
     padding: 5px;
+    user-select: none;
 }
 
 .unavailable {
@@ -53,6 +53,7 @@ body {
 .available {
     color: #fff;
     background-color: #564e98;
+    cursor: pointer;
 }
 
 .fa-angles-right {
