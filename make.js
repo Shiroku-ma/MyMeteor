@@ -1,7 +1,9 @@
 let STARIMAGES = []
 const imageSize = 1000;
 let STATE = {
-    'isOpen':true
+    'isSettingOpen':true,
+    'isAreaDragging':false,
+    'isAreaShown':false //<TEMP>
 }
 let addMode = document.getElementById('addMode');
 let areaLayer;
@@ -16,18 +18,12 @@ const Star = class {
     }
 };
 
-let mouse = [0,0]; // This is the mouse position on the client screen, not on canvas.
-window.addEventListener('click', (e) => {
-    mouse[0] = e.clientX;
-    mouse[1] = e.clientY;
-});
-
-function isOnSetting() {
-    if(!STATE['isOpen']) return false;
-    const elemnt = document.elementFromPoint(mouse[0], mouse[1]);
-    console.log(mouse[0], mouse[1]);
-    if(elemnt.id != "defaultCanvas0") return false;
-    return true;
+function isOnCanvas(x, y) {
+    if(!STATE['isSettingOpen']) return true;
+    const elemnt = document.elementFromPoint(x, y);
+    console.log(elemnt)
+    if(elemnt.id == "defaultCanvas0") return true;
+    return false;
 }
 
 function setup() {
@@ -39,23 +35,6 @@ function setup() {
     imgLoad();
 }
 
-(function() {
-    const settingWrap = document.getElementById('settingWrap');
-    let isVisible = true;
-    document.getElementById('hideToggle').addEventListener('click', (e) => {
-        if(isVisible) {
-            settingWrap.classList.remove('visible');
-            settingWrap.classList.add('hidden');
-            e.target.classList.add('fa-flip-horizontal');
-        } else {
-            settingWrap.classList.remove('hidden');
-            settingWrap.classList.add('visible');
-            e.target.classList.remove('fa-flip-horizontal');
-        }
-        isVisible = !isVisible;
-    });
-})()
-
 function imgLoad() {
     STARIMAGES.push(null)
     for(i = 1; i < 7; i++) {
@@ -64,34 +43,21 @@ function imgLoad() {
     }
 }
 
-let mouseStartX;
-let mouseStartY;
-let mouseEndX;
-let mouseEndY;
-let range = false;
-function mousePressed() {
-    if(addMode.value == "click") {
-        clear();
-        image(starLayer,0,0);
-    }
-    if(addMode.value == "area" && mouseX > 0) {
-        areaLayer = createGraphics(windowWidth, windowHeight);
-        areaLayer.noFill();
-        areaLayer.stroke(140,140,140);
-        areaLayer.strokeWeight(1);
-        areaLayer.clear();
-        clear();
-        image(starLayer,0,0);
-        mouseStartX = mouseX;
-        mouseStartY = mouseY;
-        if(range) {
-            putStar.classList.remove('available');
-            putStar.classList.add('unavailable');
-            range = false;
+(function() {
+    const settingWrap = document.getElementById('settingWrap');
+    document.getElementById('hideToggle').addEventListener('click', (e) => {
+        if(STATE['isSettingOpen']) {
+            settingWrap.classList.remove('visible');
+            settingWrap.classList.add('hidden');
+            e.target.classList.add('fa-flip-horizontal');
+        } else {
+            settingWrap.classList.remove('hidden');
+            settingWrap.classList.add('visible');
+            e.target.classList.remove('fa-flip-horizontal');
         }
-    }
-}
-
+        STATE['isSettingOpen'] = !STATE['isSettingOpen'];
+    });
+})()
 
 function addStar(x,y,brightness) {
     stars.push(new Star(x,y,brightness));
@@ -104,28 +70,72 @@ function addStar(x,y,brightness) {
     image(starLayer,0,0);
 }
 
-function mouseReleased() {
-    if(addMode.value == "area" && mouseX > 0) {
-        mouseEndX = mouseX;
-        mouseEndY = mouseY;
-        putStar.classList.remove('unavailable');
-        putStar.classList.add('available');
-        range = true;
+let hoverElement = null;
+function mouseMoved() {
+    hoverElement = document.elementFromPoint(mouseX, mouseY);
+}
+
+function clearArea() {
+    putStar.classList.remove('available');
+    putStar.classList.add('unavailable');
+    STATE['isAreaShown'] = false;
+}
+
+let squareArea = [0,0,0,0]; //sX,sY,eX,eY
+function mousePressed() {
+    if(addMode.value == "click") {
+        clear();
+        image(starLayer,0,0);
+    } else if(addMode.value == "area") {
+        if(hoverElement.id == "defaultCanvas0") {
+            STATE['isAreaDragging'] = true;
+            if(STATE['isAreaShown']) {
+                clearArea();
+            }
+            areaLayer = createGraphics(windowWidth, windowHeight);
+            areaLayer.noFill();
+            areaLayer.stroke(140,140,140);
+            areaLayer.strokeWeight(1);
+            areaLayer.clear();
+            clear();
+            image(starLayer,0,0);
+            squareArea[0] = mouseX;
+            squareArea[1] = mouseY;
+        }
     }
 }
 
 function mouseDragged() {
-    if(addMode.value == "area" && mouseX > 0) {
-        areaLayer.clear();
-        clear();
-        areaLayer.rect(mouseStartX,mouseStartY,mouseX - mouseStartX,mouseY - mouseStartY)
-        image(areaLayer, 0 ,0);
-        image(starLayer,0,0);
+    if(addMode.value == "area") {
+        if(STATE['isAreaDragging']) {
+            areaLayer.clear();
+            clear();
+            areaLayer.rect(squareArea[0],squareArea[1],mouseX - squareArea[0],mouseY - squareArea[1]);
+            image(areaLayer, 0 ,0);
+            image(starLayer,0,0);
+        }
+    }
+}
+
+function mouseReleased() {
+    if(addMode.value == "area") {
+        if(!STATE['isAreaShown'] && STATE['isAreaDragging']) { //If the area is being shown when the mouse releases, that means that you didn't press on the canvas before that.
+            squareArea[2] = mouseX;
+            squareArea[3] = mouseY;
+            if(squareArea[0] != squareArea[2] && squareArea[1] != squareArea[3]) {
+                STATE['isAreaDragging'] = false;
+                STATE['isAreaShown'] = true;
+                putStar.classList.remove('unavailable');
+                putStar.classList.add('available');
+            } else {
+                clearArea();
+            }
+        }
     }
 }
 
 function mouseClicked(){
-    if(isOnSetting()) {
+    if(hoverElement.id == "defaultCanvas0") {
         if(addMode.value == "click") {
             addStar(mouseX, mouseY, document.getElementById('brightness').value);
         }
@@ -136,25 +146,23 @@ const starNumber = document.getElementById('starNumber');
 const rb = document.getElementById('rb');
 const putStar = document.getElementById('putStar');
 function putStarInArea() {
-    if(range) {
+    if(STATE['isAreaShown']) {
         if (rb.checked) {
             for(i = 0; i < Number(starNumber.value); i++ ){
-                const x = Math.random() * (mouseEndX - mouseStartX) + mouseStartX;
-                const y = Math.random() * (mouseEndY - mouseStartY) + mouseStartY;
+                const x = Math.random() * (squareArea[2] - squareArea[0]) + squareArea[0];
+                const y = Math.random() * (squareArea[3] - squareArea[1]) + squareArea[1];
                 const brightness = Math.floor(Math.random()*(7))
                 addStar(x, y, brightness);
             }
         } else {
             for(i = 0; i < Number(starNumber.value); i++ ){
-                const x = Math.random() * (mouseEndX - mouseStartX) + mouseStartX;
-                const y = Math.random() * (mouseEndY - mouseStartY) + mouseStartY;
+                const x = Math.random() * (squareArea[2] - squareArea[0]) + squareArea[0];
+                const y = Math.random() * (squareArea[3] - squareArea[1]) + squareArea[1];
                 const brightness = document.getElementById('brightness').value;
                 addStar(x, y, brightness)
             }
         }
-        putStar.classList.remove('available');
-        putStar.classList.add('unavailable');
-        range = false;
+        clearArea();
     }
 }
 
