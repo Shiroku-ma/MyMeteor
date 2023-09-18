@@ -84,8 +84,9 @@ function clearArea() {
 let squareArea = [0,0,0,0]; //sX,sY,eX,eY
 function mousePressed() {
     if(addMode.value == "click") {
-        clear();
-        image(starLayer,0,0);
+        if(hoverElement.id == "defaultCanvas0") {
+            addStar(mouseX, mouseY, document.getElementById('brightness').value);
+        }
     } else if(addMode.value == "area") {
         if(hoverElement.id == "defaultCanvas0") {
             STATE['isAreaDragging'] = true;
@@ -130,14 +131,6 @@ function mouseReleased() {
             } else {
                 clearArea();
             }
-        }
-    }
-}
-
-function mouseClicked(){
-    if(hoverElement.id == "defaultCanvas0") {
-        if(addMode.value == "click") {
-            addStar(mouseX, mouseY, document.getElementById('brightness').value);
         }
     }
 }
