@@ -11,10 +11,11 @@ let starLayer;
 
 let stars = [];
 const Star = class {
-    constructor(x, y, brightness) {
+    constructor(x, y, brightness, color) {
         this.x = x;
         this.y = y;
         this.brightness = brightness;
+        this.color = color;
     }
 };
 
@@ -41,6 +42,11 @@ function imgLoad() {
         path = `http://127.0.0.1:5500/star-img/w_${i}.png`;
         STARIMAGES.push(loadImage(path)); 
     }
+    STARIMAGES.push(null)
+    for(i = 1; i < 7; i++) {
+        path = `http://127.0.0.1:5500/star-img/r_${i}.png`;
+        STARIMAGES.push(loadImage(path)); 
+    }
 }
 
 (function() {
@@ -60,11 +66,21 @@ function imgLoad() {
 })()
 
 function addStar(x,y,brightness) {
-    stars.push(new Star(x,y,brightness));
+    let color;
+    let add = 0;
+    if (document.getElementById('color_white').checked) {
+        color = "white";
+        fill(255,255,255);
+    } else if (document.getElementById('color_red').checked) {
+        color = "red";
+        fill(246,101,91);
+        add = 7;
+    }
+    stars.push(new Star(x,y,brightness,color));
     if(brightness == 0) {
         starLayer.rect(x, y, 1, 1);
     } else {
-        starLayer.image(STARIMAGES[brightness], x-imageSize/2, y-imageSize/2);
+        starLayer.image(STARIMAGES[Number(brightness) + add], x-imageSize/2, y-imageSize/2);
     }
     clear();
     image(starLayer,0,0);
