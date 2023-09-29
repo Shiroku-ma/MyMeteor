@@ -5,7 +5,8 @@ html, body {
 body {
     overflow: hidden;
     background-color: #000;
-    font-family: sans-serif;
+    font-family: "YakuHanJPs","Roboto","Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3",Arial,"nc3Jp",sans-serif !important;
+    color: #bbbbbb;
 }
 
 .editor, #settingWrap {
@@ -20,9 +21,9 @@ body {
     border-left: #474747 1px solid;
     border-top: #474747 1px solid;
     border-bottom: #474747 1px solid;
-    color: #aaa;
     border-radius: 8px 0px 0px 8px;
-    padding: 10px
+    padding: 10px;
+    font-size: 14px;
 }
 
 #setting p {
@@ -89,4 +90,16 @@ body {
 .hidden {
     right: -190px;
     transition: all 0.5s;
+}
+
+select {
+    box-sizing: border-box;
+    padding: 4px 10px 4px 10px;
+    width: 100%;
+    border-radius: 4px;
+    border: #474747 solid 1px;
+    background-color: #252525;
+    color: #bbbbbb;
+    -webkit-appearance: none;
+    appearance: none; 
 }

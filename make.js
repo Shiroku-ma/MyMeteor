@@ -78,7 +78,7 @@ function addStar(x,y,brightness) {
     }
     stars.push(new Star(x,y,brightness,color));
     if(brightness == 0) {
-        starLayer.rect(x, y, 1, 1);
+        starLayer.rect(x, y, 2, 2);
     } else {
         starLayer.image(STARIMAGES[Number(brightness) + add], x-imageSize/2, y-imageSize/2);
     }
